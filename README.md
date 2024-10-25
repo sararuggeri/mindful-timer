@@ -47,10 +47,4 @@ This Chrome extension is a **Pomodoro Timer** designed to help you stay producti
 - **Chrome APIs**: For local storage and notifications.
 - **HTML/CSS**: To build and style the user interface.
 
-## Contributing
-
-Contributions are welcome! Please submit a pull request or raise an issue for any bugs or feature requests.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+**This project included use of AI powered technology to review and improve code.**
