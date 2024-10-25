@@ -1,35 +1,33 @@
 let timer;
 let timeLeft;
+let totalTime;
 let isRunning = false;
-let currentSession = {
-  startTime: null,
-  duration: 0
-};
+let isBreak = false;
 
-const timerDisplay = document.querySelector('.timer');
+const CIRCLE_RADIUS = 90;
+const CIRCLE_CIRCUMFERENCE = 2 * Math.PI * CIRCLE_RADIUS;
+const BREAK_DURATION = 5 * 60; // 5 minutes break
+
+const timerDisplay = document.querySelector('.time-display .time');
+const phaseDisplay = document.querySelector('.time-display .phase');
+const progressRing = document.querySelector('.progress');
 const startButton = document.querySelector('.start');
 const resetButton = document.querySelector('.reset');
 const timeOptions = document.querySelectorAll('.time-option');
 const customTimeInput = document.querySelector('.custom-time input');
-const customTimeButton = document.querySelector('.custom-time button');
-const themeToggle = document.querySelector('#theme-toggle');
-const soundToggle = document.querySelector('#sound-toggle');
+const setTimeButton = document.querySelector('.set-time');
 
-// Load saved settings and stats
-chrome.storage.local.get(['theme', 'soundEnabled', 'stats'], (result) => {
-  if (result.theme === 'dark') {
-    document.body.setAttribute('data-theme', 'dark');
-    themeToggle.checked = true;
-  }
-  
-  if (result.soundEnabled === false) {
-    soundToggle.checked = false;
-  }
-  
+progressRing.style.strokeDasharray = CIRCLE_CIRCUMFERENCE;
+progressRing.style.strokeDashoffset = 0;
+
+// Load stats
+chrome.storage.local.get(['stats'], (result) => {
   if (result.stats) {
     updateStatsDisplay(result.stats);
   }
 });
+
+
 
 function formatTime(seconds) {
   const minutes = Math.floor(seconds / 60);
@@ -37,150 +35,146 @@ function formatTime(seconds) {
   return `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
 }
 
-function playSound() {
-  if (soundToggle.checked) {
-    const audio = new Audio('notification.mp3');
-    audio.play();
-  }
+function setProgress(percent) {
+  const offset = CIRCLE_CIRCUMFERENCE - (percent / 100 * CIRCLE_CIRCUMFERENCE);
+  progressRing.style.strokeDashoffset = offset;
+}
+
+function updateStats() {
+  chrome.storage.local.get(['stats'], (result) => {
+    const today = new Date().toDateString();
+    const stats = result.stats || {
+      totalSessions: 0,
+      totalMinutes: 0,
+      lastDate: null
+    };
+
+    if (stats.lastDate !== today) {
+      stats.totalSessions = 0;
+      stats.totalMinutes = 0;
+      stats.lastDate = today;
+    }
+
+    stats.totalSessions++;
+    stats.totalMinutes += Math.floor(totalTime / 60);
+
+    chrome.storage.local.set({ stats }, () => {
+      updateStatsDisplay(stats);
+    });
+  });
+}
+
+function updateStatsDisplay(stats) {
+  document.getElementById('total-sessions').textContent = stats.totalSessions || 0;
+  document.getElementById('total-minutes').textContent = stats.totalMinutes || 0;
+}
+
+function startBreak() {
+  isBreak = true;
+  timeLeft = BREAK_DURATION;
+  totalTime = BREAK_DURATION;
+  phaseDisplay.textContent = 'break';
+  progressRing.style.stroke = '#94a3b8';
+  timerDisplay.textContent = formatTime(timeLeft);
+  setProgress(100);
+  startTimer();
 }
 
 function updateTimer() {
   if (timeLeft <= 0) {
     clearInterval(timer);
     isRunning = false;
-    startButton.textContent = 'Start';
+    startButton.textContent = 'start';
     
-    // Update statistics
-    chrome.storage.local.get(['stats'], (result) => {
-      const stats = result.stats || {
-        totalSessions: 0,
-        totalMinutes: 0,
-        dailySessions: 0,
-        lastSessionDate: null,
-        streak: 0
-      };
-      
-      const today = new Date().toDateString();
-      
-      stats.totalSessions++;
-      stats.totalMinutes += Math.floor(currentSession.duration / 60);
-      
-      if (stats.lastSessionDate === today) {
-        stats.dailySessions++;
-      } else {
-        stats.dailySessions = 1;
-        if (stats.lastSessionDate === new Date(Date.now() - 86400000).toDateString()) {
-          stats.streak++;
-        } else {
-          stats.streak = 1;
-        }
-      }
-      
-      stats.lastSessionDate = today;
-      
-      chrome.storage.local.set({ stats }, () => {
-        updateStatsDisplay(stats);
+    if (!isBreak) {
+      updateStats();
+      chrome.notifications.create({
+        type: 'basic',
+        iconUrl: 'icon48.png',
+        title: 'Focus Session Complete',
+        message: 'Well done! Time for a short break.'
       });
-    });
-    
-    playSound();
-    chrome.notifications.create({
-      type: 'basic',
-      iconUrl: 'icon48.png',
-      title: 'Time\'s up!',
-      message: 'Your study session is complete.'
-    });
+      startBreak();
+    } else {
+      isBreak = false;
+      phaseDisplay.textContent = 'focus';
+      progressRing.style.stroke = '#94a3b8';
+      chrome.notifications.create({
+        type: 'basic',
+        iconUrl: 'icon48.png',
+        title: 'Break Complete',
+        message: 'Ready for another focus session?'
+      });
+    }
     return;
   }
   
   timeLeft--;
+  const progressPercent = (timeLeft / totalTime) * 100;
+  setProgress(progressPercent);
   timerDisplay.textContent = formatTime(timeLeft);
 }
 
-function updateStatsDisplay(stats) {
-  document.getElementById('total-sessions').textContent = stats.totalSessions || 0;
-  document.getElementById('total-minutes').textContent = stats.totalMinutes || 0;
-  document.getElementById('daily-sessions').textContent = stats.dailySessions || 0;
-  document.getElementById('streak').textContent = stats.streak || 0;
+function startTimer() {
+  timer = setInterval(updateTimer, 1000);
+  startButton.textContent = 'pause';
+  isRunning = true;
 }
 
 startButton.addEventListener('click', () => {
   if (isRunning) {
     clearInterval(timer);
-    startButton.textContent = 'Start';
+    startButton.textContent = 'start';
     isRunning = false;
   } else {
-    if (!currentSession.startTime) {
-      currentSession.startTime = Date.now();
-      currentSession.duration = timeLeft;
-    }
-    timer = setInterval(updateTimer, 1000);
-    startButton.textContent = 'Pause';
-    isRunning = true;
+    startTimer();
   }
 });
 
 resetButton.addEventListener('click', () => {
   clearInterval(timer);
+  isBreak = false;
   const activeTime = document.querySelector('.time-option.active').textContent;
   timeLeft = parseInt(activeTime) * 60;
+  totalTime = timeLeft;
   timerDisplay.textContent = formatTime(timeLeft);
-  startButton.textContent = 'Start';
+  phaseDisplay.textContent = 'focus';
+  progressRing.style.stroke = '#94a3b8';
+  setProgress(100);
+  startButton.textContent = 'start';
   isRunning = false;
-  currentSession = {
-    startTime: null,
-    duration: 0
-  };
 });
 
 timeOptions.forEach(option => {
   option.addEventListener('click', () => {
-    timeOptions.forEach(opt => opt.classList.remove('active'));
-    option.classList.add('active');
-    const minutes = parseInt(option.textContent);
-    timeLeft = minutes * 60;
-    timerDisplay.textContent = formatTime(timeLeft);
-    clearInterval(timer);
-    startButton.textContent = 'Start';
-    isRunning = false;
-    currentSession = {
-      startTime: null,
-      duration: 0
-    };
+    if (!isRunning) {
+      timeOptions.forEach(opt => opt.classList.remove('active'));
+      option.classList.add('active');
+      const minutes = parseInt(option.textContent);
+      timeLeft = minutes * 60;
+      totalTime = timeLeft;
+      timerDisplay.textContent = formatTime(timeLeft);
+      setProgress(100);
+    }
   });
 });
 
-customTimeButton.addEventListener('click', () => {
-  const minutes = parseInt(customTimeInput.value);
-  if (minutes && minutes > 0 && minutes <= 120) {
-    timeLeft = minutes * 60;
-    timerDisplay.textContent = formatTime(timeLeft);
-    timeOptions.forEach(opt => opt.classList.remove('active'));
-    clearInterval(timer);
-    startButton.textContent = 'Start';
-    isRunning = false;
-    currentSession = {
-      startTime: null,
-      duration: 0
-    };
-    customTimeInput.value = '';
+setTimeButton.addEventListener('click', () => {
+  if (!isRunning) {
+    const minutes = parseInt(customTimeInput.value);
+    if (minutes && minutes > 0 && minutes <= 120) {
+      timeLeft = minutes * 60;
+      totalTime = timeLeft;
+      timerDisplay.textContent = formatTime(timeLeft);
+      setProgress(100);
+      timeOptions.forEach(opt => opt.classList.remove('active'));
+      customTimeInput.value = '';
+    }
   }
-});
-
-themeToggle.addEventListener('change', () => {
-  if (themeToggle.checked) {
-    document.body.setAttribute('data-theme', 'dark');
-    chrome.storage.local.set({ theme: 'dark' });
-  } else {
-    document.body.removeAttribute('data-theme');
-    chrome.storage.local.set({ theme: 'light' });
-  }
-});
-
-soundToggle.addEventListener('change', () => {
-  chrome.storage.local.set({ soundEnabled: soundToggle.checked });
 });
 
 // Initialize timer
 timeLeft = 25 * 60;
+totalTime = timeLeft;
 timerDisplay.textContent = formatTime(timeLeft);
+setProgress(100);
