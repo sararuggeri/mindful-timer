@@ -1,222 +1,153 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <style>
-    body {
-      width: 320px;
-      height: 480px;
-      margin: 0;
-      padding: 20px;
-      background: #fafafa;
-      font-family: 'Inter', system-ui, -apple-system, sans-serif;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      color: #334155;
-    }
-
-    .container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: start;
-      height: 100%;
-      gap: 24px;
-      padding-top: 20px;
-    }
-
-    .timer-circle {
-      position: relative;
-      width: 200px;
-      height: 200px;
-    }
-
-    .progress-ring {
-      transform: rotate(-90deg);
-      transition: all 0.2s ease;
-    }
-
-    .progress-ring circle {
-      fill: none;
-      stroke-width: 4;
-      transition: all 0.2s ease;
-    }
-
-    .progress-ring .background {
-      stroke: #e2e8f0;
-    }
-
-    .progress-ring .progress {
-      stroke: #94a3b8;
-      stroke-linecap: round;
-    }
-
-    .time-display {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      text-align: center;
-    }
-
-    .time {
-      font-size: 32px;
-      font-weight: 300;
-      color: #475569;
-    }
-
-    .phase {
-      font-size: 12px;
-      color: #94a3b8;
-      margin-top: 4px;
-    }
-
-    .controls {
-      display: flex;
-      gap: 12px;
-    }
-
-    button {
-      background: none;
-      border: none;
-      padding: 8px 16px;
-      font-size: 15px;
-      color: #64748b;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      border-radius: 20px;
-    }
-
-    button:hover {
-      background: #f1f5f9;
-      color: #334155;
-    }
-
-    .time-options {
-      display: flex;
-      gap: 8px;
-      flex-wrap: wrap;
-      justify-content: center;
-      max-width: 280px;
-    }
-
-    .time-option {
-      padding: 6px 12px;
-      border-radius: 16px;
-      font-size: 14px;
-      color: #64748b;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .time-option:hover {
-      background: #f1f5f9;
-      color: #334155;
-    }
-
-    .time-option.active {
-      background: #e2e8f0;
-      color: #334155;
-    }
-
-    .custom-time {
-      display: flex;
-      gap: 8px;
-      align-items: center;
-      margin-top: 8px;
-    }
-
-    .custom-time input {
-      width: 60px;
-      padding: 6px 12px;
-      border: 1px solid #e2e8f0;
-      border-radius: 16px;
-      font-size: 14px;
-      color: #64748b;
-      background: none;
-      text-align: center;
-    }
-
-    .custom-time input:focus {
-      outline: none;
-      border-color: #94a3b8;
-    }
-
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 16px;
-      margin-top: auto;
-      padding: 16px;
-      background: #f1f5f9;
-      border-radius: 16px;
-      width: calc(100% - 32px);
-    }
-
-    .stat-item {
-      text-align: center;
-    }
-
-    .stat-value {
-      font-size: 24px;
-      font-weight: 300;
-      color: #475569;
-    }
-
-    .stat-label {
-      font-size: 12px;
-      color: #94a3b8;
-      margin-top: 4px;
-    }
-
-    .status {
-      font-size: 14px;
-      color: #94a3b8;
-      font-weight: 300;
-      text-align: center;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mindful Timer</title>
+    <link href="styles.css" rel="stylesheet">
 </head>
 <body>
-  <div class="container">
-    <div class="timer-circle">
-      <svg class="progress-ring" width="200" height="200">
-        <circle class="background" cx="100" cy="100" r="90"/>
-        <circle class="progress" cx="100" cy="100" r="90"/>
-      </svg>
-      <div class="time-display">
-        <div class="time">25:00</div>
-        <div class="phase">focus</div>
-      </div>
+    <div class="container">
+        <div class="header">
+            <button id="settings-btn" class="icon-btn" title="Settings">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/>
+                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1Z"/>
+                </svg>
+            </button>
+            <button id="history-btn" class="icon-btn" title="History">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 8v4l3 3"/>
+                    <circle cx="12" cy="12" r="10"/>
+                </svg>
+            </button>
+        </div>
+
+        <div class="timer-circle">
+            <svg class="progress-ring" width="200" height="200">
+                <circle class="background" cx="100" cy="100" r="90"></circle>
+                <circle class="progress" cx="100" cy="100" r="90"></circle>
+            </svg>
+            <div class="time-display">
+                <div class="time">25:00</div>
+                <div class="phase">focus</div>
+                <div class="session-count">Session 1</div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="start">start</button>
+            <button class="reset">reset</button>
+        </div>
+
+        <div class="time-options">
+            <button class="time-option active">25m</button>
+            <button class="time-option">15m</button>
+            <button class="time-option">5m</button>
+        </div>
+
+        <div class="custom-time">
+            <input type="number" min="1" max="120" placeholder="Custom minutes">
+            <button class="set">set</button>
+        </div>
+
+        <div class="stats">
+            <div class="stat-item">
+                <div id="total-sessions" class="stat-value">0</div>
+                <div class="stat-label">sessions today</div>
+            </div>
+            <div class="stat-item">
+                <div id="total-minutes" class="stat-value">0</div>
+                <div class="stat-label">minutes focused</div>
+            </div>
+            <div class="stat-item">
+                <div id="current-streak" class="stat-value">0</div>
+                <div class="stat-label">day streak</div>
+            </div>
+        </div>
     </div>
 
-    <div class="controls">
-      <button class="start">start</button>
-      <button class="reset">reset</button>
+    <div id="history-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Session History</h2>
+                <button class="close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="history-filters">
+                    <select id="history-filter">
+                        <option value="all">All Time</option>
+                        <option value="today">Today</option>
+                        <option value="week">This Week</option>
+                        <option value="month">This Month</option>
+                    </select>
+                </div>
+                <div class="history-list"></div>
+            </div>
+        </div>
     </div>
 
-    <div class="time-options">
-      <div class="time-option active">25m</div>
-      <div class="time-option">15m</div>
-      <div class="time-option">5m</div>
+    <div id="settings-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Settings</h2>
+                <button class="close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="setting-group">
+                    <h3>Timer Duration</h3>
+                    <div class="setting-item">
+                        <label>Focus Session</label>
+                        <input type="number" id="focus-duration" min="1" max="120" value="25">
+                    </div>
+                    <div class="setting-item">
+                        <label>Short Break</label>
+                        <input type="number" id="break-duration" min="1" max="30" value="5">
+                    </div>
+                    <div class="setting-item">
+                        <label>Long Break</label>
+                        <input type="number" id="long-break-duration" min="5" max="60" value="15">
+                    </div>
+                    <div class="setting-item">
+                        <label>Sessions before Long Break</label>
+                        <input type="number" id="sessions-before-long-break" min="2" max="8" value="4">
+                    </div>
+                </div>
+                
+                <div class="setting-group">
+                    <h3>Notifications</h3>
+                    <div class="setting-item">
+                        <label>Sound Enabled</label>
+                        <input type="checkbox" id="sound-enabled" checked>
+                    </div>
+                    <div class="setting-item">
+                        <label>Notifications Enabled</label>
+                        <input type="checkbox" id="notifications-enabled" checked>
+                    </div>
+                    <div class="setting-item">
+                        <label>Badge Counter</label>
+                        <input type="checkbox" id="badge-enabled" checked>
+                    </div>
+                </div>
+
+                <div class="setting-group">
+                    <h3>Automation</h3>
+                    <div class="setting-item">
+                        <label>Auto-start Breaks</label>
+                        <input type="checkbox" id="auto-start-breaks" checked>
+                    </div>
+                    <div class="setting-item">
+                        <label>Long Break Enabled</label>
+                        <input type="checkbox" id="long-break-enabled" checked>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="save-settings">Save Settings</button>
+            </div>
+        </div>
     </div>
 
-    <div class="custom-time">
-      <input type="number" placeholder="min" min="1" max="120">
-      <button class="set-time">set</button>
-    </div>
-
-    <div class="stats">
-      <div class="stat-item">
-        <div class="stat-value" id="total-sessions">0</div>
-        <div class="stat-label">sessions today</div>
-      </div>
-      <div class="stat-item">
-        <div class="stat-value" id="total-minutes">0</div>
-        <div class="stat-label">minutes focused</div>
-      </div>
-    </div>
-  </div>
-  <script src="popup.js"></script>
+    <script src="popup.js"></script>
 </body>
 </html>

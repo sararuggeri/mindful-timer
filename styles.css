@@ -1,0 +1,173 @@
+body {
+    width: 320px;
+    height: 530px;
+    margin: 0;
+    padding: 20px;
+    background: #fafafa;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #334155;
+  }
+
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
+    height: 100%;
+    gap: 24px;
+    padding-top: 20px;
+  }
+
+  .timer-circle {
+    position: relative;
+    width: 200px;
+    height: 200px;
+  }
+
+  .progress-ring {
+    transform: rotate(-90deg);
+    transition: all 0.2s ease;
+  }
+
+  .progress-ring circle {
+    fill: none;
+    stroke-width: 4;
+    transition: all 0.2s ease;
+  }
+
+  .progress-ring .background {
+    stroke: #e2e8f0;
+  }
+
+  .progress-ring .progress {
+    stroke: #94a3b8;
+    stroke-linecap: round;
+  }
+
+  .time-display {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+  }
+
+  .time {
+    font-size: 32px;
+    font-weight: 300;
+    color: #475569;
+  }
+
+  .phase {
+    font-size: 12px;
+    color: #94a3b8;
+    margin-top: 4px;
+  }
+
+  .controls {
+    display: flex;
+    gap: 12px;
+  }
+
+  button {
+    background: none;
+    border: none;
+    padding: 8px 16px;
+    font-size: 15px;
+    color: #64748b;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-radius: 20px;
+  }
+
+  button:hover {
+    background: #f1f5f9;
+    color: #334155;
+  }
+
+  .time-options {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 280px;
+  }
+
+  .time-option {
+    padding: 6px 12px;
+    border-radius: 16px;
+    font-size: 14px;
+    color: #64748b;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .time-option:hover {
+    background: #f1f5f9;
+    color: #334155;
+  }
+
+  .time-option.active {
+    background: #e2e8f0;
+    color: #334155;
+  }
+
+  .custom-time {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin-top: 8px;
+  }
+
+  .custom-time input {
+    width: 60px;
+    padding: 6px 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    font-size: 14px;
+    color: #64748b;
+    background: none;
+    text-align: center;
+  }
+
+  .custom-time input:focus {
+    outline: none;
+    border-color: #94a3b8;
+  }
+
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-top: auto;
+    padding: 16px;
+    background: #f1f5f9;
+    border-radius: 16px;
+    width: calc(100% - 32px);
+  }
+
+  .stat-item {
+    text-align: center;
+  }
+
+  .stat-value {
+    font-size: 24px;
+    font-weight: 300;
+    color: #475569;
+  }
+
+  .stat-label {
+    font-size: 12px;
+    color: #94a3b8;
+    margin-top: 4px;
+  }
+
+  .status {
+    font-size: 14px;
+    color: #94a3b8;
+    font-weight: 300;
+    text-align: center;
+  }
