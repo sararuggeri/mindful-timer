@@ -1,13 +1,13 @@
 
 # Pomodoro Timer Chrome Extension
 
-![Extension Logo](path/to/logo.png)
+![Extension Logo](icon128.png)
 
 ## Overview
 
 This Chrome extension is a **Pomodoro Timer** designed to help you stay productive by dividing work into focus and break intervals. It allows you to set focus sessions, track your progress visually with a progress ring, and notifies you when it's time for a break. The timer can be customized with different time options, and your stats are saved locally for each session.
 
-![Preview of Extension](path/to/preview-image.png)
+![Preview of Extension](secondary-image-files/preview.png)
 
 ## Features
 
@@ -47,10 +47,4 @@ This Chrome extension is a **Pomodoro Timer** designed to help you stay producti
 - **Chrome APIs**: For local storage and notifications.
 - **HTML/CSS**: To build and style the user interface.
 
-## Contributing
-
-Contributions are welcome! Please submit a pull request or raise an issue for any bugs or feature requests.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+**This project included use of AI powered technology to review and improve code.**
