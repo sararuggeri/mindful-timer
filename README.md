@@ -32,15 +32,6 @@ This Chrome extension is a **Pomodoro Timer** designed to help you stay producti
 4. Click on **Load Unpacked** and select the folder containing the extension files.
 5. The extension should now appear in your toolbar.
 
-## File Structure
-
-```
-/popup.js           - Main script for handling timer logic and UI interactions
-/manifest.json      - Configuration for the Chrome extension
-/icon48.png         - Icon for notifications and extension display
-/logo.png           - Extension logo (optional)
-```
-
 ## Technologies Used
 
 - **JavaScript**: For handling timer logic, user input, and storage.
