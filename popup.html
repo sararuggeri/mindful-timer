@@ -8,20 +8,12 @@
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <button id="settings-btn" class="icon-btn" title="Settings">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/>
-                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1Z"/>
-                </svg>
-            </button>
-            <button id="history-btn" class="icon-btn" title="History">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M12 8v4l3 3"/>
-                    <circle cx="12" cy="12" r="10"/>
-                </svg>
-            </button>
-        </div>
+        <button class="settings-button">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
+                <circle cx="12" cy="12" r="3"/>
+            </svg>
+        </button>
 
         <div class="timer-circle">
             <svg class="progress-ring" width="200" height="200">
@@ -65,88 +57,62 @@
                 <div class="stat-label">day streak</div>
             </div>
         </div>
-    </div>
 
-    <div id="history-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Session History</h2>
-                <button class="close">&times;</button>
+        <!-- Add this at the end of the container div, before the closing tag -->
+<div class="settings-modal" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2>Settings</h2>
+            <button class="close-settings">&times;</button>
+        </div>
+        
+        <div class="settings-section">
+            <h3>Break Duration</h3>
+            <div class="setting-item">
+                <label>Short Break</label>
+                <input type="number" id="shortBreak" min="1" max="30" value="5">
+                <span class="unit">min</span>
             </div>
-            <div class="modal-body">
-                <div class="history-filters">
-                    <select id="history-filter">
-                        <option value="all">All Time</option>
-                        <option value="today">Today</option>
-                        <option value="week">This Week</option>
-                        <option value="month">This Month</option>
-                    </select>
-                </div>
-                <div class="history-list"></div>
+            <div class="setting-item">
+                <label>Long Break</label>
+                <input type="number" id="longBreak" min="5" max="60" value="15">
+                <span class="unit">min</span>
+            </div>
+        </div>
+
+        <div class="settings-section">
+            <h3>Auto Start</h3>
+            <div class="setting-item">
+                <label>Auto-start Breaks</label>
+                <label class="switch">
+                    <input type="checkbox" id="autoStartBreaks">
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <div class="setting-item">
+                <label>Auto-start Focus</label>
+                <label class="switch">
+                    <input type="checkbox" id="autoStartFocus">
+                    <span class="slider"></span>
+                </label>
+            </div>
+        </div>
+
+        <div class="settings-section">
+            <h3>Notifications</h3>
+            <div class="setting-item">
+                <label>Sound Alerts</label>
+                <label class="switch">
+                    <input type="checkbox" id="soundAlerts">
+                    <span class="slider"></span>
+                </label>
             </div>
         </div>
     </div>
-
-    <div id="settings-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Settings</h2>
-                <button class="close">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div class="setting-group">
-                    <h3>Timer Duration</h3>
-                    <div class="setting-item">
-                        <label>Focus Session</label>
-                        <input type="number" id="focus-duration" min="1" max="120" value="25">
-                    </div>
-                    <div class="setting-item">
-                        <label>Short Break</label>
-                        <input type="number" id="break-duration" min="1" max="30" value="5">
-                    </div>
-                    <div class="setting-item">
-                        <label>Long Break</label>
-                        <input type="number" id="long-break-duration" min="5" max="60" value="15">
-                    </div>
-                    <div class="setting-item">
-                        <label>Sessions before Long Break</label>
-                        <input type="number" id="sessions-before-long-break" min="2" max="8" value="4">
-                    </div>
-                </div>
-                
-                <div class="setting-group">
-                    <h3>Notifications</h3>
-                    <div class="setting-item">
-                        <label>Sound Enabled</label>
-                        <input type="checkbox" id="sound-enabled" checked>
-                    </div>
-                    <div class="setting-item">
-                        <label>Notifications Enabled</label>
-                        <input type="checkbox" id="notifications-enabled" checked>
-                    </div>
-                    <div class="setting-item">
-                        <label>Badge Counter</label>
-                        <input type="checkbox" id="badge-enabled" checked>
-                    </div>
-                </div>
-
-                <div class="setting-group">
-                    <h3>Automation</h3>
-                    <div class="setting-item">
-                        <label>Auto-start Breaks</label>
-                        <input type="checkbox" id="auto-start-breaks" checked>
-                    </div>
-                    <div class="setting-item">
-                        <label>Long Break Enabled</label>
-                        <input type="checkbox" id="long-break-enabled" checked>
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button id="save-settings">Save Settings</button>
-            </div>
-        </div>
+</div>
     </div>
+
+
 
     <script src="popup.js"></script>
 </body>
